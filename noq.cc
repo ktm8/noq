@@ -26,9 +26,13 @@ int main(void)
 {
 	std::vector<std::complex<double>> v = {
 		std::complex<double> (1., 2.),
+		std::complex<double> (2., 1.),
 		std::complex<double> (3., 4.),
+		std::complex<double> (4., 3.),
 		std::complex<double> (5., 6.),
+		std::complex<double> (6., 5.),
 		std::complex<double> (7., 8.),
+		std::complex<double> (8., 7.),
 	};
 
 	std::cout << std::fixed << std::setprecision(1);
@@ -38,16 +42,30 @@ int main(void)
 		std::cout << e << std::endl;
 	}
 
-	fft_fw_rec(v, 2);
+	fft_fw_rec(v, 3);
 
-	std::cout << "Forward" << std::endl;
+	std::cout << "Forward - Recursive" << std::endl;
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
 
-	fft_bw_rec(v, 2);
+	fft_bw_rec(v, 3);
 
-	std::cout << "Backward" << std::endl;
+	std::cout << "Backward - Recursive" << std::endl;
+	for (std::complex<double> e: v) {
+		std::cout << e << std::endl;
+	}
+
+	fft_fw_inp(v, 3);
+
+	std::cout << "Forward - In-place" << std::endl;
+	for (std::complex<double> e: v) {
+		std::cout << e << std::endl;
+	}
+
+	fft_bw_inp(v, 3);
+
+	std::cout << "Backward - In-place" << std::endl;
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
