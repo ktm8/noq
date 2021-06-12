@@ -1,10 +1,10 @@
-CXXFLAGS = -Wall -Wextra -Werror -std=c++14 -pedantic -O3
+CXXFLAGS = -Wall -Wextra -Werror -std=c++14 -pedantic -O2
 LDFLAGS  = -lstdc++ -lm
 
 SOURCES  = noq.cc lib.cc
 OBJECTS  = $(SOURCES:.cc=.o)
 
-.PHONY: all clean
+.PHONY: all clean weather
 
 all: options noq
 
@@ -14,7 +14,14 @@ options:
 	@echo "CXXFLAGS = $(CXXFLAGS)"
 	@echo "LDFLAGS  = $(LDFLAGS)"
 
+weather:
+	cat data/TG_SOUID171642.txt \
+		| awk -f script/filter.awk \
+		| awk -f script/gen-weather.awk \
+		> weather.h
+
 noq: $(OBJECTS)
+noq.o: weather.h
 
 clean:
 	rm -f noq $(OBJECTS)

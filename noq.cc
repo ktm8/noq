@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "lib.h"
+#include "weather.h"
 
 int main(void)
 {
@@ -34,6 +35,8 @@ int main(void)
 		std::complex<double> (7., 8.),
 		std::complex<double> (8., 7.),
 	};
+
+	std::cout << "Weather Data: " << weather.size() << std::endl;
 
 	std::cout << std::fixed << std::setprecision(1);
 
