@@ -1,0 +1,4 @@
+weather.h
+
+data/*.txt
+!data/TG_SOUID171642.txt
