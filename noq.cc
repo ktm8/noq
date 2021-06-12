@@ -25,6 +25,9 @@
 
 int main(void)
 {
+#ifdef TEST
+	std::cout << "TESTING" << std::endl;
+#else
 	std::vector<std::complex<double>> v = {
 		std::complex<double> (1., 2.),
 		std::complex<double> (2., 1.),
@@ -72,6 +75,6 @@ int main(void)
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
-
+#endif
 	return 0;
 }

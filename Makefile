@@ -4,9 +4,12 @@ LDFLAGS  = -lstdc++ -lm
 SOURCES  = noq.cc lib.cc
 OBJECTS  = $(SOURCES:.cc=.o)
 
-.PHONY: all clean weather
+.PHONY: all test options clean weather
 
 all: options noq
+
+test: CXXFLAGS += -DTEST
+test: all
 
 options:
 	@echo Build options:
