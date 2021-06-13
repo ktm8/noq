@@ -78,16 +78,19 @@ int main(void)
 #else /* ! TEST */
 int main(void)
 {
-	std::vector<std::complex<double>> dat;
-	std::size_t M, N, n;
+	std::size_t K;	
+	std::vector<int> transformed;
 
-	M   = weather.size();
-	dat = pad(weather);
-	N   = dat.size();
-	n   = lg(N);
+	K = 10000;
+	transformed = compress(weather, K);
 
-	std::cout << "Size: " << M << " -> " << N << " " << n << std::endl;
-	
+	std::cout << "Size: " << weather.size() << std::endl;
+	std::cout << "Keep: " << K << "\n" << std::endl;
+
+	for (int i = 0; i < 10; i++)
+		std::cout << weather[i] << "\t"
+			<< transformed[i] << std::endl;
+
 	return 0;
 }
 #endif /* TEST */

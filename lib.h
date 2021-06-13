@@ -18,8 +18,7 @@
 #include <complex>
 #include <vector>
 
-std::size_t lg(std::size_t N);
-std::vector<std::complex<double>> pad(std::vector<int> v);
+std::vector<int> compress(std::vector<int> v, std::size_t K);
 
 void fft_fw_rec(std::vector<std::complex<double>> &v);
 void fft_bw_rec(std::vector<std::complex<double>> &v);

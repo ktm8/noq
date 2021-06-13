@@ -20,6 +20,8 @@
 #include <iostream>
 #include <vector>
 
+#include "lib.h"
+
 std::size_t lg(std::size_t N)
 {
 	std::size_t n;
@@ -34,21 +36,47 @@ std::size_t lg(std::size_t N)
 std::vector<std::complex<double>> pad(std::vector<int> v)
 {
 	std::vector<std::complex<double>> res;
-	std::size_t N, n, k;
+	std::size_t M, N, n, k;
 
-	N = v.size();
-	n = lg(N);
+	M = v.size();
+	n = lg(M);
+	N = 1 << n;
 
-	for (k = 0; k < (std::size_t) (1 << n); k++) {
+	res.resize(N);
+	for (k = 0; k < N; k++) {
 		std::complex<double> e;
 
-		if (k < N)
+		if (k < M)
 			e = std::complex<double> (v[k], 0);
 		else
 			e = std::complex<double> (0, 0);
 
-		res.push_back(e);
+		res[k] = e;
 	}
+
+	return res;
+}
+
+std::vector<int> compress(std::vector<int> v, std::size_t K)
+{
+	std::vector<int> res;
+	std::vector<std::complex<double>> dat;
+	std::size_t M, N, k;
+
+	M   = v.size();
+	dat = pad(v);
+	N   = dat.size();
+
+	fft_fw_rec(dat);
+
+	for (k = K; k < N; k++)
+		dat[k] = std::complex<double> (0, 0);
+
+	fft_bw_rec(dat);
+
+	res.resize(M);
+	for (k = 0; k < M; k++)
+		res[k] = dat[k].real();
 
 	return res;
 }
