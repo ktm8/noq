@@ -23,11 +23,9 @@
 #include "lib.h"
 #include "weather.h"
 
+#ifdef TEST
 int main(void)
 {
-#ifdef TEST
-	std::cout << "TESTING" << std::endl;
-#else
 	std::vector<std::complex<double>> v = {
 		std::complex<double> (1., 2.),
 		std::complex<double> (2., 1.),
@@ -38,8 +36,6 @@ int main(void)
 		std::complex<double> (7., 8.),
 		std::complex<double> (8., 7.),
 	};
-
-	std::cout << "Weather Data: " << weather.size() << std::endl;
 
 	std::cout << std::fixed << std::setprecision(1);
 
@@ -75,6 +71,23 @@ int main(void)
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
-#endif
+
 	return 0;
 }
+
+#else /* ! TEST */
+int main(void)
+{
+	std::vector<std::complex<double>> dat;
+	std::size_t M, N, n;
+
+	M   = weather.size();
+	dat = pad(weather);
+	N   = dat.size();
+	n   = lg(N);
+
+	std::cout << "Size: " << M << " -> " << N << " " << n << std::endl;
+	
+	return 0;
+}
+#endif /* TEST */

@@ -9,7 +9,7 @@ OBJECTS  = $(SOURCES:.cc=.o)
 all: options noq
 
 test: CXXFLAGS += -DTEST
-test: all
+test: clean all
 
 options:
 	@echo Build options:

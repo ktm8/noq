@@ -20,6 +20,39 @@
 #include <iostream>
 #include <vector>
 
+std::size_t lg(std::size_t N)
+{
+	std::size_t n;
+
+	n = 0;
+	while ((std::size_t) (1 << n) < N)
+		n += 1;
+
+	return n;
+}
+
+std::vector<std::complex<double>> pad(std::vector<int> v)
+{
+	std::vector<std::complex<double>> res;
+	std::size_t N, n, k;
+
+	N = v.size();
+	n = lg(N);
+
+	for (k = 0; k < (std::size_t) (1 << n); k++) {
+		std::complex<double> e;
+
+		if (k < N)
+			e = std::complex<double> (v[k], 0);
+		else
+			e = std::complex<double> (0, 0);
+
+		res.push_back(e);
+	}
+
+	return res;
+}
+
 void fft_fw_rec(std::vector<std::complex<double>> &v, std::size_t n)
 {
 	std::size_t N, k;
