@@ -21,8 +21,8 @@
 std::size_t lg(std::size_t N);
 std::vector<std::complex<double>> pad(std::vector<int> v);
 
-void fft_fw_rec(std::vector<std::complex<double>> &v, std::size_t n);
-void fft_bw_rec(std::vector<std::complex<double>> &v, std::size_t n);
+void fft_fw_rec(std::vector<std::complex<double>> &v);
+void fft_bw_rec(std::vector<std::complex<double>> &v);
 
-void fft_fw_inp(std::vector<std::complex<double>> &v, std::size_t n);
-void fft_bw_inp(std::vector<std::complex<double>> &v, std::size_t n);
+void fft_fw_inp(std::vector<std::complex<double>> &v);
+void fft_bw_inp(std::vector<std::complex<double>> &v);

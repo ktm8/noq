@@ -53,12 +53,12 @@ std::vector<std::complex<double>> pad(std::vector<int> v)
 	return res;
 }
 
-void fft_fw_rec(std::vector<std::complex<double>> &v, std::size_t n)
+void fft_fw_rec(std::vector<std::complex<double>> &v)
 {
 	std::size_t N, k;
 	std::vector<std::complex<double>> v0, v1;
 
-	N = 1 << n;
+	N = v.size();
 	if (N == 1)
 		return;
 
@@ -69,8 +69,8 @@ void fft_fw_rec(std::vector<std::complex<double>> &v, std::size_t n)
 		v1[k] = v[2 * k + 1];
 	}
 
-	fft_fw_rec(v0, n-1);
-	fft_fw_rec(v1, n-1);
+	fft_fw_rec(v0);
+	fft_fw_rec(v1);
 
 	for (k = 0; k < N / 2; k++) {
 		std::complex<double> tw;
@@ -84,12 +84,12 @@ void fft_fw_rec(std::vector<std::complex<double>> &v, std::size_t n)
 	return;
 }
 
-void fft_bw_rec(std::vector<std::complex<double>> &v, std::size_t n)
+void fft_bw_rec(std::vector<std::complex<double>> &v)
 {
 	std::size_t N, k;
 	std::vector<std::complex<double>> v0, v1;
 
-	N = 1 << n;
+	N = v.size();
 	if (N == 1)
 		return;
 
@@ -100,8 +100,8 @@ void fft_bw_rec(std::vector<std::complex<double>> &v, std::size_t n)
 		v1[k] = v[2 * k + 1];
 	}
 
-	fft_bw_rec(v0, n-1);
-	fft_bw_rec(v1, n-1);
+	fft_bw_rec(v0);
+	fft_bw_rec(v1);
 
 	for (k = 0; k < N / 2; k++) {
 		std::complex<double> tw;
@@ -120,12 +120,12 @@ void fft_bw_rec(std::vector<std::complex<double>> &v, std::size_t n)
  * https://folk.idi.ntnu.no/elster/pubs/elster-bit-rev-1989.pdf
  */
 
-void fft_fw_inp(std::vector<std::complex<double>> &v, std::size_t n)
+void fft_fw_inp(std::vector<std::complex<double>> &v)
 {
 	std::size_t N, L, s, k;
 	std::vector<std::size_t> brp;
 
-	N = 1 << n;
+	N = v.size();
 	if (N == 1)
 		return;
 
@@ -156,12 +156,12 @@ void fft_fw_inp(std::vector<std::complex<double>> &v, std::size_t n)
 	}
 }
 
-void fft_bw_inp(std::vector<std::complex<double>> &v, std::size_t n)
+void fft_bw_inp(std::vector<std::complex<double>> &v)
 {
 	std::size_t N, L, s, k;
 	std::vector<std::size_t> brp;
 
-	N = 1 << n;
+	N = v.size();
 	if (N == 1)
 		return;
 

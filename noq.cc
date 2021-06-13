@@ -44,28 +44,28 @@ int main(void)
 		std::cout << e << std::endl;
 	}
 
-	fft_fw_rec(v, 3);
+	fft_fw_rec(v);
 
 	std::cout << "Forward - Recursive" << std::endl;
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
 
-	fft_bw_rec(v, 3);
+	fft_bw_rec(v);
 
 	std::cout << "Backward - Recursive" << std::endl;
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
 
-	fft_fw_inp(v, 3);
+	fft_fw_inp(v);
 
 	std::cout << "Forward - In-place" << std::endl;
 	for (std::complex<double> e: v) {
 		std::cout << e << std::endl;
 	}
 
-	fft_bw_inp(v, 3);
+	fft_bw_inp(v);
 
 	std::cout << "Backward - In-place" << std::endl;
 	for (std::complex<double> e: v) {
