@@ -81,15 +81,20 @@ int main(void)
 	std::size_t K;	
 	std::vector<int> transformed;
 
-	K = 10000;
-	transformed = compress(weather, K);
+	K = 8000;
+	std::cout << std::fixed << std::setprecision(1);
 
 	std::cout << "Size: " << weather.size() << std::endl;
-	std::cout << "Keep: " << K << "\n" << std::endl;
+	std::cout << "Padded: " << (1 << lg(weather.size())) << std::endl;
+	std::cout << "Keep: " << K << std::endl;
 
-	for (int i = 0; i < 10; i++)
-		std::cout << weather[i] << "\t"
-			<< transformed[i] << std::endl;
+	transformed = compress(weather, K);
+	diff(weather, transformed);
+
+	std::cout << "Sample:" << std::endl;
+	for (int i = 0; i < 8; i++)
+		std::cout << "\t" << weather[i]
+			<< "\t" << transformed[i] << std::endl;
 
 	return 0;
 }

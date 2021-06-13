@@ -67,18 +67,51 @@ std::vector<int> compress(std::vector<int> v, std::size_t K)
 	dat = pad(v);
 	N   = dat.size();
 
-	fft_fw_rec(dat);
+	fft_fw_inp(dat);
+
+	/* DEBUG */
+	double foo = 0;
+	for (k = 0; k < N; k++) {
+		foo += norm(dat[k]);
+	}
+	std::cout << "DEBUG: Avg norm = " << foo / N << std::endl;
+	/* END */
 
 	for (k = K; k < N; k++)
 		dat[k] = std::complex<double> (0, 0);
 
-	fft_bw_rec(dat);
+	fft_bw_inp(dat);
 
 	res.resize(M);
 	for (k = 0; k < M; k++)
 		res[k] = dat[k].real();
 
 	return res;
+}
+
+void diff(std::vector<int> v1, std::vector<int> v2)
+{
+	std::size_t N, k;
+	int total, max_d;
+
+	N = v1.size();
+	if (v2.size() != N)
+		return;
+
+	total = 0;
+	max_d = 0;
+	for (k = 0; k < N; k++) {
+		int d = abs(v1[k] - v2[k]);
+
+		total += d;
+		max_d  = std::max<int>(max_d, d);
+	}
+
+	std::cout << "Differences: " << std::endl;
+	std::cout << "\tAverage: " << (double) total / N << std::endl;
+	std::cout << "\tMaximum: " << max_d << std::endl;
+
+	return;
 }
 
 void fft_fw_rec(std::vector<std::complex<double>> &v)
