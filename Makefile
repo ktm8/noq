@@ -1,7 +1,7 @@
 CXXFLAGS = -Wall -Wextra -Werror -std=c++14 -pedantic -O2
-LDFLAGS  = -lstdc++ -lm
+LDFLAGS  = -lstdc++ -lm -lpthread
 
-SOURCES  = noq.cc lib.cc
+SOURCES  = noq.cc lib.cc pool.cc
 OBJECTS  = $(SOURCES:.cc=.o)
 
 .PHONY: all test options clean weather
