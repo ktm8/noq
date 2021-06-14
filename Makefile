@@ -4,7 +4,7 @@ LDFLAGS  = -lstdc++ -lm -lpthread
 SOURCES  = noq.cc lib.cc pool.cc
 OBJECTS  = $(SOURCES:.cc=.o)
 
-.PHONY: all test options clean weather
+.PHONY: all test options clean weather report
 
 all: options noq
 
@@ -22,6 +22,9 @@ weather:
 		| awk -f script/filter.awk \
 		| awk -f script/gen-weather.awk \
 		> weather.h
+
+report:
+	cd report/ && pdflatex report.tex
 
 noq: $(OBJECTS)
 noq.o: weather.h
