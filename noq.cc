@@ -78,23 +78,34 @@ int main(void)
 #else /* ! TEST */
 int main(void)
 {
-	std::size_t K;	
 	std::vector<int> transformed;
+	std::size_t M, N, n, K;
 
+	M = weather.size();
+	n = lg(M);
+	N = 1 << n;
 	K = 8000;
-	std::cout << std::fixed << std::setprecision(1);
 
-	std::cout << "Size: " << weather.size() << std::endl;
-	std::cout << "Padded: " << (1 << lg(weather.size())) << std::endl;
-	std::cout << "Keep: " << K << std::endl;
+	std::cout << "=== Weather Data ===" << std::endl;
+	std::cout << "Size: " << M << std::endl;
+	std::cout << "Padded: " << N << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "=== Approximation ===" << std::endl;
+	std::cout << "Keep: " << K << " / " << N << std::endl;
 
 	transformed = compress(weather, K);
 	diff(weather, transformed);
 
-	std::cout << "Sample:" << std::endl;
+	std::cout << "Samples:" << std::endl;
 	for (int i = 0; i < 8; i++)
 		std::cout << "\t" << weather[i]
 			<< "\t" << transformed[i] << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "=== Benchmark ===" << std::endl;
+
+	benchmark(weather);
 
 	return 0;
 }

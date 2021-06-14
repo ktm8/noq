@@ -21,6 +21,7 @@
 std::size_t lg(std::size_t N);
 std::vector<int> compress(std::vector<int> v, std::size_t K);
 void diff(std::vector<int> v1, std::vector<int> v2);
+void benchmark(std::vector<int> v);
 
 void fft_fw_rec(std::vector<std::complex<double>> &v);
 void fft_bw_rec(std::vector<std::complex<double>> &v);

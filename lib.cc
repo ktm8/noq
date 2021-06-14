@@ -15,12 +15,22 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
    */
 
+#include <chrono>
 #include <cmath>
 #include <complex>
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
 #include "lib.h"
+
+#define TIME(VAR, STATEMENT) do { \
+	auto time_from = std::chrono::high_resolution_clock::now(); \
+	STATEMENT; \
+	auto time_to = std::chrono::high_resolution_clock::now(); \
+	std::chrono::duration<double> time_diff = time_to - time_from; \
+	VAR = 1000 * time_diff.count(); \
+} while (0)
 
 std::size_t lg(std::size_t N)
 {
@@ -69,14 +79,6 @@ std::vector<int> compress(std::vector<int> v, std::size_t K)
 
 	fft_fw_inp(dat);
 
-	/* DEBUG */
-	double foo = 0;
-	for (k = 0; k < N; k++) {
-		foo += norm(dat[k]);
-	}
-	std::cout << "DEBUG: Avg norm = " << foo / N << std::endl;
-	/* END */
-
 	for (k = K; k < N; k++)
 		dat[k] = std::complex<double> (0, 0);
 
@@ -107,9 +109,36 @@ void diff(std::vector<int> v1, std::vector<int> v2)
 		max_d  = std::max<int>(max_d, d);
 	}
 
-	std::cout << "Differences: " << std::endl;
+	std::cout << std::fixed << std::setprecision(2);
+
+	std::cout << "Error: " << std::endl;
 	std::cout << "\tAverage: " << (double) total / N << std::endl;
 	std::cout << "\tMaximum: " << max_d << std::endl;
+
+	return;
+}
+
+void benchmark(std::vector<int> v)
+{
+	std::vector<std::complex<double>> dat;
+	std::size_t M, N;
+	double time;
+
+	M   = v.size();
+	dat = pad(v);
+	N   = dat.size();
+
+	(void) (M + N);
+
+	std::cout << std::fixed << std::setprecision(1);
+
+	TIME(time, { fft_fw_rec(dat); fft_bw_rec(dat); });
+	std::cout << "Single-threaded Recursive FFT: "
+		<< time << " ms" << std::endl;
+
+	TIME(time, { fft_fw_inp(dat); fft_bw_rec(dat); });
+	std::cout << "Single-threaded In-place FFT): "
+		<< time << " ms" << std::endl;
 
 	return;
 }
