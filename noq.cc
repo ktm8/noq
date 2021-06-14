@@ -72,6 +72,20 @@ int main(void)
 		std::cout << e << std::endl;
 	}
 
+	fft_fw_par(v);
+
+	std::cout << "Forward - Parallel" << std::endl;
+	for (std::complex<double> e: v) {
+		std::cout << e << std::endl;
+	}
+
+	fft_bw_par(v);
+
+	std::cout << "Backward - Parallel" << std::endl;
+	for (std::complex<double> e: v) {
+		std::cout << e << std::endl;
+	}
+
 	return 0;
 }
 

@@ -23,6 +23,10 @@
 #include <vector>
 
 #include "lib.h"
+#include "pool.h"
+
+/* Number of workers per pool, default to 4 */
+static int NUM_THREADS = 4;
 
 #define TIME(VAR, STATEMENT) do { \
 	auto time_from = std::chrono::high_resolution_clock::now(); \
@@ -132,24 +136,28 @@ void diff(std::vector<int> v1, std::vector<int> v2)
 void benchmark(std::vector<int> v)
 {
 	std::vector<std::complex<double>> dat;
-	std::size_t M, N;
+	std::size_t k;
 	double time;
 
-	M   = v.size();
 	dat = pad(v);
-	N   = dat.size();
-
-	(void) (M + N);
 
 	std::cout << std::fixed << std::setprecision(1);
 
 	BENCH(time, { fft_fw_rec(dat); fft_bw_rec(dat); });
-	std::cout << "Single-threaded Recursive FFT: "
+	std::cout << "1-thread Recursive FFT: "
 		<< time << " ms" << std::endl;
 
-	BENCH(time, { fft_fw_inp(dat); fft_bw_rec(dat); });
-	std::cout << "Single-threaded In-place FFT): "
+	BENCH(time, { fft_fw_inp(dat); fft_bw_inp(dat); });
+	std::cout << "1-thread In-place FFT (inline): "
 		<< time << " ms" << std::endl;
+
+	for (k = 1; k <= 32; k *= 2) {
+		NUM_THREADS = k;
+
+		BENCH(time, { fft_fw_par(dat); fft_bw_par(dat); });
+		std::cout << NUM_THREADS << "-thread FFT: "
+			<< time << " ms" << std::endl;
+	}
 
 	return;
 }
@@ -289,6 +297,112 @@ void fft_bw_inp(std::vector<std::complex<double>> &v)
 
 			v[s + k]         = (tx + tw * ty) / 2.;
 			v[s + k + L / 2] = (tx - tw * ty) / 2.;
+		}
+	}
+}
+
+void fft_fw_par_task(std::vector<std::complex<double>> &v,
+		     std::size_t L, std::size_t s)
+{
+	std::size_t k;
+
+	for (k = 0; k < L / 2; k++) {
+		std::complex<double> tx, ty, tw;
+
+		tx = v[s + k];
+		ty = v[s + k + L / 2];
+		tw = std::polar(1., -2. * acos(-1) * k / L);
+
+		v[s + k]         = tx + tw * ty;
+		v[s + k + L / 2] = tx - tw * ty;
+	}
+}
+
+void fft_bw_par_task(std::vector<std::complex<double>> &v,
+		     std::size_t L, std::size_t s)
+{
+	std::size_t k;
+
+	for (k = 0; k < L / 2; k++) {
+		std::complex<double> tx, ty, tw;
+
+		tx = v[s + k];
+		ty = v[s + k + L / 2];
+		tw = std::polar(1., 2. * acos(-1) * k / L);
+
+		v[s + k]         = (tx + tw * ty) / 2.;
+		v[s + k + L / 2] = (tx - tw * ty) / 2.;
+	}
+}
+
+void fft_fw_par(std::vector<std::complex<double>> &v)
+{
+	std::size_t N, L, s, k;
+	std::vector<std::size_t> brp;
+
+	N = v.size();
+	if (N == 1)
+		return;
+
+	brp.resize(N);
+	brp[0] = 0;
+	brp[1] = N / 2;
+	for (k = 1; k < N / 2; k++) {
+		brp[2 * k]     = brp[k] / 2;
+		brp[2 * k + 1] = brp[2 * k] + N / 2;
+	}
+
+	for (k = 0; k < N; k++) {
+		if (k < brp[k])
+			std::swap(v[k], v[brp[k]]);
+	}
+
+	for (L = 2; L <= N; L *= 2) {
+		if (L*L >= N) {
+			Pool pool(NUM_THREADS);
+
+			for (s = 0; s < N; s += L)
+				pool.add_task(&fft_fw_par_task,
+					      std::ref(v), L, s);
+		} else {
+			for (s = 0; s < N; s += L)
+				fft_fw_par_task(std::ref(v), L, s);
+		}
+	}
+}
+
+void fft_bw_par(std::vector<std::complex<double>> &v)
+{
+	std::size_t N, L, s, k;
+	std::vector<std::size_t> brp;
+
+	N = v.size();
+	if (N == 1)
+		return;
+
+	brp.resize(N);
+	brp[0] = 0;
+	brp[1] = N / 2;
+	for (k = 1; k < N / 2; k++) {
+		brp[2 * k]     = brp[k] / 2;
+		brp[2 * k + 1] = brp[2 * k] + N / 2;
+	}
+
+	for (k = 0; k < N; k++) {
+		if (k < brp[k])
+			std::swap(v[k], v[brp[k]]);
+	}
+
+	for (L = 2; L <= N; L *= 2) {
+		if (L*L >= N) {
+			Pool pool(NUM_THREADS);
+
+			for (s = 0; s < N; s += L)
+				pool.add_task(&fft_bw_par_task,
+					      std::ref(v), L, s);
+		} else {
+			for (s = 0; s < N; s += L)
+				fft_bw_par_task(std::ref(v), L, s);
 		}
 	}
 }

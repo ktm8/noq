@@ -28,3 +28,6 @@ void fft_bw_rec(std::vector<std::complex<double>> &v);
 
 void fft_fw_inp(std::vector<std::complex<double>> &v);
 void fft_bw_inp(std::vector<std::complex<double>> &v);
+
+void fft_fw_par(std::vector<std::complex<double>> &v);
+void fft_bw_par(std::vector<std::complex<double>> &v);
