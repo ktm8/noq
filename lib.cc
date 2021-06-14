@@ -32,6 +32,17 @@
 	VAR = 1000 * time_diff.count(); \
 } while (0)
 
+#define BENCH_LOOP 100
+#define BENCH(VAR, STATEMENT) do { \
+	double tt = 0; \
+	for (int ii = 0; ii < BENCH_LOOP; ii++) { \
+		double tttt; \
+		TIME(tttt, STATEMENT); \
+		tt += tttt; \
+	} \
+	VAR = tt / BENCH_LOOP; \
+} while (0)
+
 std::size_t lg(std::size_t N)
 {
 	std::size_t n;
@@ -132,11 +143,11 @@ void benchmark(std::vector<int> v)
 
 	std::cout << std::fixed << std::setprecision(1);
 
-	TIME(time, { fft_fw_rec(dat); fft_bw_rec(dat); });
+	BENCH(time, { fft_fw_rec(dat); fft_bw_rec(dat); });
 	std::cout << "Single-threaded Recursive FFT: "
 		<< time << " ms" << std::endl;
 
-	TIME(time, { fft_fw_inp(dat); fft_bw_rec(dat); });
+	BENCH(time, { fft_fw_inp(dat); fft_bw_rec(dat); });
 	std::cout << "Single-threaded In-place FFT): "
 		<< time << " ms" << std::endl;
 
