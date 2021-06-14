@@ -97,9 +97,10 @@ choice instead of the FFT.
 We calculate and compare the running time of all 3 versions of the FFT. We
 also vary the number of workers in the worker pool.
 
-The number is the average running time over 100 runs on a dataset of 8192
-numbers, tested on a Intel i5-4300M CPU with 4 cores.
+The number is the average running time over 100 runs on an Intest i5-4300M
+CPU with 4 cores.
 
+- Array Size: 8192
 \begin{itemize}
 	\item 1-thread Recursive FFT: 4.3 ms
 	\item 1-thread In-place FFT (inline): 2.7 ms
@@ -109,6 +110,18 @@ numbers, tested on a Intel i5-4300M CPU with 4 cores.
 	\item 8-thread FFT: 6.1 ms
 	\item 16-thread FFT: 10.3 ms
 	\item 32-thread FFT: 19.3 ms
+\end{itemize}
+
+- Array Size: 65536
+\begin{itemize}
+	\item 1-thread Recursive FFT: 45.3 ms
+	\item 1-thread In-place FFT (inline): 26.6 ms
+	\item 1-thread FFT: 35.6 ms
+	\item 2-thread FFT: 30.5 ms
+	\item 4-thread FFT: 26.8 ms
+	\item 8-thread FFT: 27.4 ms
+	\item 16-thread FFT: 33.8 ms
+	\item 32-thread FFT: 47.2 ms
 \end{itemize}
 
 The result shows insignificant improvement for the parallelization. A
